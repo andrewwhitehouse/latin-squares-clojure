@@ -29,17 +29,17 @@
 
   (testing "Duplicate values in second row and first column"
     (is (= {:row-values [#{1 2 3} #{1 3} #{1 2 3}]
-            :column-values [#{1 3} #{1 2 3} #{1 2 3}]}
+            :column-values [#{1 2 3} #{1 3} #{1 2 3}]}
            (square-values [[1 2 3] [1 3 1] [3 1 2]]))))
 
   (testing "Duplicate values in first row and second column"
     (is (= {:row-values [#{1 3} #{1 2 3} #{1 2 3}]
-            :column-values [#{1 2 3} #{1 3} #{1 2 3}]}
+            :column-values [#{1 3} #{1 2 3} #{1 2 3}]}
            (square-values [[1 1 3] [2 3 1] [3 1 2]]))))
 
   (testing "Duplicate values in second row and third column"
     (is (= {:row-values [#{1 2 3} #{2 3} #{1 2 3}]
-            :column-values [#{1 2 3} #{1 2 3} #{2 3}]}
+            :column-values [#{1 2 3}  #{2 3} #{1 2 3}]}
            (square-values [[1 2 3] [2 3 2] [3 1 2]]))))
 
   (testing "1x1 square is allowed"

@@ -6,25 +6,23 @@
 
 (defn square-values [square]
   (let [size (count square)
-        row-values (vec (repeat size (i/int-set)))
-        col-values (vec (repeat size (i/int-set)))]
-    (reduce
-      (fn [acc [ri ci]]
-        (let [value (get-in square [ri ci] :not-found)]
-          (if (= :not-found value)
-            (throw (ex-info "Missing value"
-                            {:cause        :missing-value
-                             :row-index    ri
-                             :column-index ci})))
-          (if (or (<= value 0) (> value size))
-            (throw (ex-info "Value out of range"
-                            {:cause :out-of-range
-                             :value value})))
-          (-> acc
-              (update-in [:row-values ri] conj value)
-              (update-in [:column-values ci] conj value))))
-      {:row-values row-values :column-values col-values}
-      (for [ri (range size) ci (range size)] [ri ci]))))
+        rowcol-values (object-array (map (fn [_] (i/int-set)) (range (* 2 size))))]
+    (doseq [ri (range size)
+            ci (range size)]
+      (let [value (get-in square [ri ci] :not-found)]
+        (if (= :not-found value)
+          (throw (ex-info "Missing value"
+                          {:cause        :missing-value
+                           :row-index    ri
+                           :column-index ci})))
+        (if (or (<= value 0) (> value size))
+          (throw (ex-info "Value out of range"
+                          {:cause :out-of-range
+                           :value value})))
+        (aset rowcol-values ri (conj (aget rowcol-values ri) value) )
+        (aset rowcol-values (+ size ri) (conj (aget rowcol-values (+ size ri)) value))))
+    (let [result (seq rowcol-values)]
+      {:row-values (take size result) :column-values (drop size result)})))
 
 
 (defn latin-square?
